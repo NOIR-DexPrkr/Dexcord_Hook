@@ -104,6 +104,7 @@ export const translations = {
     modal_delete_fail_desc: 'No se pudo eliminar el mensaje de Discord. Es posible que ya haya sido eliminado o que la URL del webhook sea inválida.',
     modal_clear_title: '¿Limpiar todo?',
     modal_clear_desc: 'Esto borrará todo el contenido actual del redactor. ¿Estás seguro?',
+    foot_copyright: 'Dexcord Hook. Todos los derechos reservados.',
   },
   en: {
     dashboard: 'Dashboard',
@@ -210,6 +211,7 @@ export const translations = {
     modal_delete_fail_desc: 'Could not delete the message from Discord. It might have already been deleted or the webhook URL is invalid.',
     modal_clear_title: 'Clear everything?',
     modal_clear_desc: 'This will clear all current content in the composer. Are you sure?',
+    foot_copyright: 'Dexcord Hook. All rights reserved.',
   },
 };
 
