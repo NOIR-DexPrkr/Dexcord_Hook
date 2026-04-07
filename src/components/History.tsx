@@ -9,10 +9,11 @@ interface HistoryProps {
   onTriggerEdit: (msg: SentMessage) => void;
   onDeleteMessage: (msg: SentMessage, discordDelete: boolean) => Promise<boolean>;
   showModal: (config: Omit<ModalProps, 'isOpen'>) => void;
+  closeModal: () => void;
   language: Language;
 }
 
-const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMessage, showModal, language }) => {
+const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMessage, showModal, closeModal, language }) => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const t = translations[language];
 
@@ -22,11 +23,12 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
       message: t.modal_remove_local_desc,
       confirmLabel: t.modal_remove_local_confirm,
       onConfirm: async () => {
+        closeModal();
         setDeletingId(msg.id);
         await onDeleteMessage(msg, false);
         setDeletingId(null);
       },
-      onCancel: () => {},
+      onCancel: () => closeModal(),
       type: 'info'
     });
   };
@@ -37,20 +39,21 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
       message: t.modal_delete_discord_desc,
       confirmLabel: t.modal_delete_discord_confirm,
       onConfirm: async () => {
+        closeModal();
         setDeletingId(msg.id);
         const success = await onDeleteMessage(msg, true);
         if (!success) {
            showModal({
              title: t.modal_delete_fail_title,
              message: t.modal_delete_fail_desc,
-             onConfirm: () => {},
-             onCancel: () => {},
+             onConfirm: () => closeModal(),
+             onCancel: () => closeModal(),
              type: 'danger'
            });
         }
         setDeletingId(null);
       },
-      onCancel: () => {},
+      onCancel: () => closeModal(),
       type: 'danger'
     });
   };

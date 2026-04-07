@@ -9,10 +9,11 @@ interface WebhookManagerProps {
   onAdd: (webhook: Webhook) => void;
   onDelete: (id: string) => void;
   showModal: (config: Omit<ModalProps, 'isOpen'>) => void;
+  closeModal: () => void;
   language: Language;
 }
 
-const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDelete, showModal, language }) => {
+const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDelete, showModal, closeModal, language }) => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const t = translations[language];
@@ -26,8 +27,8 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
        showModal({
          title: t.wm_invalid_url,
          message: t.wm_invalid_url_desc,
-         onConfirm: () => {},
-         onCancel: () => {},
+         onConfirm: () => closeModal(),
+         onCancel: () => closeModal(),
          type: 'warning'
        });
        return;

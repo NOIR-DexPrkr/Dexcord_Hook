@@ -11,6 +11,7 @@ interface MessageComposerProps {
   editingMessage: SentMessage | null;
   onCancelEdit: () => void;
   showModal: (config: Omit<ModalProps, 'isOpen'>) => void;
+  closeModal: () => void;
   language: Language;
 }
 
@@ -23,6 +24,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   editingMessage,
   onCancelEdit,
   showModal,
+  closeModal,
   language
 }) => {
   const [selectedWebhookId, setSelectedWebhookId] = useState(editingMessage?.webhookId || webhooks[0]?.id || '');
@@ -86,8 +88,8 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
         message: t.comp_blocked_desc,
         confirmLabel: t.modal_got_it,
         cancelLabel: t.modal_close,
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => closeModal(),
+        onCancel: () => closeModal(),
         type: 'warning'
       });
     } else if (result === false || result === null) {
@@ -335,8 +337,11 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                   message: t.modal_clear_desc,
                   confirmLabel: t.modal_confirm,
                   cancelLabel: t.modal_cancel,
-                  onConfirm: () => setPayload({ content: '', embeds: [] }),
-                  onCancel: () => {},
+                  onConfirm: () => {
+                    setPayload({ content: '', embeds: [] });
+                    closeModal();
+                  },
+                  onCancel: () => closeModal(),
                   type: 'warning'
                 })
               }}>{t.comp_clear}</button>

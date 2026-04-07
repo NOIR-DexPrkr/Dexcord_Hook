@@ -207,6 +207,7 @@ function App() {
             onAdd={addWebhook} 
             onDelete={deleteWebhook} 
             showModal={showModal}
+            closeModal={closeModal}
             language={language}
           />
         )}
@@ -219,6 +220,7 @@ function App() {
             editingMessage={editingMessage}
             onCancelEdit={cancelEdit}
             showModal={showModal}
+            closeModal={closeModal}
             language={language}
           />
         )}
@@ -229,6 +231,7 @@ function App() {
             onTriggerEdit={triggerEdit}
             onDeleteMessage={deleteMessage}
             showModal={showModal}
+            closeModal={closeModal}
             language={language}
           />
         )}
