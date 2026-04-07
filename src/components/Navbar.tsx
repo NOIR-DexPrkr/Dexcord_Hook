@@ -7,10 +7,9 @@ interface NavbarProps {
   currentView: View;
   setCurrentView: (view: View) => void;
   language: Language;
-  setLanguage: (lang: Language) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language, setLanguage }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language }) => {
   const t = translations[language];
 
   const items: { id: View; label: string; icon: React.ReactNode }[] = [
@@ -45,8 +44,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language, 
   ];
 
   return (
-    <header className="glass" style={{ 
-      height: '70px', 
+    <header style={{ 
+      height: '64px', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'space-between', 
@@ -55,37 +54,36 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language, 
       top: 0,
       zIndex: 100,
       borderBottom: '1px solid var(--border-color)',
-      background: 'rgba(19, 20, 22, 0.8)'
+      background: 'rgba(2, 6, 23, 0.8)',
+      backdropFilter: 'blur(8px)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div style={{ 
-          width: '32px', 
-          height: '32px', 
-          background: 'var(--accent-color)', 
-          borderRadius: '8px', 
+          width: '28px', 
+          height: '28px', 
+          background: 'var(--text-primary)', 
+          borderRadius: 'var(--radius-sm)', 
           display: 'grid', 
-          placeItems: 'center', 
-          boxShadow: '0 0 15px var(--glow-color)' 
+          placeItems: 'center'
         }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19 9 2-9-18-9 18 9-2ZM12 19v-9"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--bg-color)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19 9 2-9-18-9 18 9-2ZM12 19v-9"/></svg>
         </div>
-        <h2 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: 0 }}>Dexcord Hook</h2>
+        <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: 0, fontWeight: 700 }}>Dexcord Hook</h2>
       </div>
       
-      <nav style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+      <nav style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => setCurrentView(item.id)}
             className={`btn ${currentView === item.id ? 'active' : ''}`}
             style={{ 
-              background: currentView === item.id ? 'var(--accent-color)' : 'transparent',
-              color: currentView === item.id ? '#fff' : 'var(--text-secondary)',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              fontSize: '0.9rem',
-              borderRadius: 'var(--radius-sm)',
-              boxShadow: currentView === item.id ? '0 0 20px var(--glow-color)' : 'none'
+              background: currentView === item.id ? 'rgba(255,255,255,0.05)' : 'transparent',
+              color: currentView === item.id ? 'var(--text-primary)' : 'var(--text-muted)',
+              border: currentView === item.id ? '1px solid var(--border-color)' : '1px solid transparent',
+              padding: '0.4rem 0.8rem',
+              fontSize: '0.875rem',
+              borderRadius: 'var(--radius-md)'
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -94,47 +92,15 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language, 
             </span>
           </button>
         ))}
-
-        <div style={{ height: '24px', width: '1px', background: 'var(--border-color)', margin: '0 0.5rem' }}></div>
-
-        <div style={{ display: 'flex', gap: '0.25rem', background: 'rgba(0,0,0,0.2)', padding: '2px', borderRadius: 'var(--radius-sm)' }}>
-           <button 
-             onClick={() => setLanguage('es')}
-             style={{ 
-               padding: '0.25rem 0.5rem', 
-               fontSize: '0.75rem', 
-               border: 'none', 
-               borderRadius: '4px',
-               background: language === 'es' ? 'var(--accent-color)' : 'transparent',
-               color: '#fff',
-               cursor: 'pointer'
-             }}
-           >
-             ES
-           </button>
-           <button 
-             onClick={() => setLanguage('en')}
-             style={{ 
-               padding: '0.25rem 0.5rem', 
-               fontSize: '0.75rem', 
-               border: 'none', 
-               borderRadius: '4px',
-               background: language === 'en' ? 'var(--accent-color)' : 'transparent',
-               color: '#fff',
-               cursor: 'pointer'
-             }}
-           >
-             EN
-           </button>
-        </div>
       </nav>
       
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontFamily: 'var(--font-display)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
-           {t.operational}
-        </span>
-        <span>v1.2.0</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></div>
+          {t.operational}
+          <span style={{ margin: '0 0.5rem', opacity: 0.3 }}>|</span>
+          <span>v1.2.5</span>
+        </div>
       </div>
     </header>
   );

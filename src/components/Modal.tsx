@@ -31,31 +31,33 @@ const Modal: React.FC<ModalProps> = ({
   const getAccentColor = () => {
     if (type === 'danger') return '#ef4444';
     if (type === 'warning') return '#f59e0b';
-    return 'var(--accent-color)';
+    return 'var(--text-primary)';
   };
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-content glass fade-in" onClick={(e) => e.stopPropagation()} style={{ borderTop: `4px solid ${getAccentColor()}` }}>
+    <div className="modal-overlay">
+      <div className="modal-content glass fade-in" onClick={(e) => e.stopPropagation()} style={{ padding: '1.5rem', border: '1px solid var(--border-color)', maxWidth: '400px' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem', color: 'var(--text-primary)' }}>{title}</h3>
-          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>{message}</p>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{title}</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: '1.5' }}>{message}</p>
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-          <button className="btn btn-outline" onClick={onCancel}>
-            {cancelLabel || t.modal_cancel}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+          <button className="btn btn-outline" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8125rem' }} onClick={onCancel}>
+            {cancelLabel || t.modal_cancel || 'Cancel'}
           </button>
           <button 
-            className="btn" 
+            className="btn btn-primary" 
             onClick={onConfirm}
             style={{ 
               background: getAccentColor(), 
-              color: '#fff',
-              boxShadow: type === 'danger' ? '0 0 20px rgba(239, 68, 68, 0.3)' : '0 0 20px var(--glow-color)'
+              color: type === 'info' ? 'var(--bg-color)' : '#fff',
+              padding: '0.4rem 0.8rem',
+              fontSize: '0.8125rem',
+              border: type === 'info' ? 'none' : `1px solid ${getAccentColor()}`
             }}
           >
-            {confirmLabel || t.modal_confirm}
+            {confirmLabel || t.modal_confirm || 'Confirm'}
           </button>
         </div>
       </div>

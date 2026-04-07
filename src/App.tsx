@@ -9,6 +9,7 @@ import type { ModalProps } from './components/Modal'
 import type { Webhook, SentMessage, View, WebhookPayload } from './types'
 import { translations } from './translations'
 import type { Language } from './translations'
+import Footer from './components/Footer'
 
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
@@ -171,31 +172,30 @@ function App() {
         currentView={view} 
         setCurrentView={setView} 
         language={language} 
-        setLanguage={setLanguage} 
       />
       
       <main style={{ flex: 1, overflowY: 'auto', background: 'rgba(0,0,0,0.1)' }}>
         {view === 'dashboard' && (
-          <div className="fade-in" style={{ padding: '3rem' }}>
-             <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>{t.welcome}</h1>
-             <p style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', maxWidth: '600px' }}>
+          <div className="fade-in" style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+             <h1 style={{ fontSize: '2.5rem', marginBottom: '0.75rem', fontWeight: 800 }}>{t.welcome}</h1>
+             <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', maxWidth: '600px' }}>
                 {t.dashboard_desc}
              </p>
              
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginTop: '4rem' }}>
-                <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)' }}>
-                   <div style={{ color: 'var(--accent-color)', fontSize: '2rem', marginBottom: '1rem', fontWeight: 700 }}>{webhooks.length}</div>
-                   <p style={{ color: 'var(--text-muted)' }}>{t.stats_webhooks}</p>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '3rem' }}>
+                <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
+                   <div style={{ color: 'var(--text-primary)', fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 800 }}>{webhooks.length}</div>
+                   <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.stats_webhooks}</p>
                 </div>
-                <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)' }}>
-                   <div style={{ color: '#10b981', fontSize: '2rem', marginBottom: '1rem', fontWeight: 700 }}>{history.length}</div>
-                   <p style={{ color: 'var(--text-muted)' }}>{t.stats_messages}</p>
+                <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
+                   <div style={{ color: 'var(--text-primary)', fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 800 }}>{history.length}</div>
+                   <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.stats_messages}</p>
                 </div>
-                <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)', cursor: 'pointer' }} onClick={() => setView('composer')}>
-                   <div style={{ color: 'var(--accent-color)', marginBottom: '1rem' }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <div className="glass glass-hover" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }} onClick={() => setView('composer')}>
+                   <div style={{ color: 'var(--text-primary)' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                    </div>
-                   <p style={{ color: 'var(--text-muted)' }}>{t.send_new}</p>
+                   <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.9rem' }}>{t.send_new}</p>
                 </div>
              </div>
           </div>
@@ -234,7 +234,9 @@ function App() {
         )}
       </main>
 
-      <Modal {...modal} onCancel={modal.onCancel || closeModal} />
+      <Footer language={language} onLanguageChange={setLanguage} />
+
+      <Modal {...modal} onCancel={modal.onCancel || closeModal} language={language} />
     </div>
   )
 }

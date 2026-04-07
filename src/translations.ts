@@ -21,6 +21,14 @@ export const translations = {
     wm_invalid_url: 'URL de Webhook Inválida',
     wm_invalid_url_desc: 'La URL proporcionada no parece ser una URL de Webhook de Discord válida. Debe comenzar con https://discord.com/api/webhooks/',
     wm_no_webhooks: 'Aún no has agregado ningún webhook.',
+    wm_registered_title: 'Webhooks Registrados',
+    wm_delete_btn: 'Eliminar',
+
+    // Footer
+    foot_created_by: 'Creado con 🤍 por',
+    foot_website: 'Sitio Web',
+    foot_discord: 'Comunidad Discord',
+    foot_donations: 'Donaciones',
 
     // Composer
     comp_title: 'Redactor Avanzado',
@@ -119,6 +127,14 @@ export const translations = {
     wm_invalid_url: 'Invalid Webhook URL',
     wm_invalid_url_desc: 'The URL provided does not appear to be a valid Discord Webhook URL. It should start with https://discord.com/api/webhooks/',
     wm_no_webhooks: 'You haven\'t added any webhooks yet.',
+    wm_registered_title: 'Registered Webhooks',
+    wm_delete_btn: 'Delete',
+
+    // Footer
+    foot_created_by: 'Created with 🤍 by',
+    foot_website: 'Website',
+    foot_discord: 'Discord Community',
+    foot_donations: 'Donations',
 
     // Composer
     comp_title: 'Advanced Composer',

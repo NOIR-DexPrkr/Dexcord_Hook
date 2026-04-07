@@ -39,56 +39,73 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
   };
 
   return (
-    <div className="fade-in" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>{t.wm_title}</h1>
+    <div className="fade-in" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 700 }}>{t.wm_title}</h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Add and manage your Discord webhook endpoints.</p>
+      </div>
       
-      <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <h3 style={{ color: 'var(--accent-color)' }}>{t.wm_add_title}</h3>
-        <div>
-          <label>{t.wm_name_label}</label>
-          <input 
-            type="text" 
-            placeholder={t.wm_name_placeholder} 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-          />
+      <form onSubmit={handleSubmit} className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>{t.wm_add_title}</h3>
+        <div style={{ display: 'grid', gap: '1rem' }}>
+          <div>
+            <label style={{ fontSize: '0.75rem' }}>{t.wm_name_label}</label>
+            <input 
+              type="text" 
+              placeholder={t.wm_name_placeholder} 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: '0.75rem' }}>{t.wm_url_label}</label>
+            <input 
+              type="text" 
+              placeholder="https://discord.com/api/webhooks/..." 
+              value={url} 
+              onChange={(e) => setUrl(e.target.value)} 
+            />
+          </div>
         </div>
-        <div>
-          <label>{t.wm_url_label}</label>
-          <input 
-            type="text" 
-            placeholder="https://discord.com/api/webhooks/..." 
-            value={url} 
-            onChange={(e) => setUrl(e.target.value)} 
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
+        <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start', padding: '0.5rem 1.5rem' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
           {t.wm_connect}
         </button>
       </form>
 
-      <div style={{ display: 'grid', gap: '1rem' }}>
-        <h3 style={{ color: 'var(--text-secondary)' }}>Registered Webhooks</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.wm_registered_title}</h3>
         {webhooks.length === 0 && (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No webhooks registered yet. Add one above to get started.</p>
-        )}
-        {webhooks.map((webhook) => (
-          <div key={webhook.id} className="glass glass-hover" style={{ padding: '1.25rem', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'var(--transition)' }}>
-             <div>
-                <h4 style={{ color: 'var(--text-primary)' }}>{webhook.name}</h4>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '400px' }}>
-                  {webhook.url}
-                </p>
-             </div>
-             <button 
-               onClick={() => onDelete(webhook.id)}
-               className="btn btn-outline" 
-               style={{ borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}
-             >
-               Delete
-             </button>
+          <div style={{ border: '1px dashed var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '3rem', textAlign: 'center' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t.wm_no_webhooks}</p>
           </div>
-        ))}
+        )}
+        <div style={{ display: 'grid', gap: '0.75rem' }}>
+          {webhooks.map((webhook) => (
+            <div key={webhook.id} className="glass glass-hover" style={{ padding: '1rem 1.25rem', borderRadius: 'var(--radius-lg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'var(--transition)' }}>
+               <div style={{ minWidth: 0 }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '0.9375rem', fontWeight: 600 }}>{webhook.name}</h4>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '400px', opacity: 0.7 }}>
+                     {webhook.url}
+                  </p>
+               </div>
+               <button 
+                 onClick={() => onDelete(webhook.id)}
+                 className="btn" 
+                 style={{ 
+                   background: 'transparent', 
+                   border: '1px solid var(--border-color)', 
+                   color: '#ef4444',
+                   padding: '0.375rem 0.75rem',
+                   fontSize: '0.75rem',
+                   borderRadius: 'var(--radius-md)'
+                 }}
+               >
+                 {t.wm_delete_btn}
+               </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
