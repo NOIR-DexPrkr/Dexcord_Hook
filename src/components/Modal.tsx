@@ -1,4 +1,6 @@
 import React from 'react';
+import { translations } from '../translations';
+import type { Language } from '../translations';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -9,19 +11,22 @@ export interface ModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   type?: 'info' | 'danger' | 'warning';
+  language?: Language;
 }
 
 const Modal: React.FC<ModalProps> = ({ 
   isOpen, 
   title, 
   message, 
-  confirmLabel = 'Confirm', 
-  cancelLabel = 'Cancel', 
+  confirmLabel, 
+  cancelLabel, 
   onConfirm, 
   onCancel,
-  type = 'info'
+  type = 'info',
+  language = 'es'
 }) => {
   if (!isOpen) return null;
+  const t = translations[language];
 
   const getAccentColor = () => {
     if (type === 'danger') return '#ef4444';
@@ -39,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({
         
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
           <button className="btn btn-outline" onClick={onCancel}>
-            {cancelLabel}
+            {cancelLabel || t.modal_cancel}
           </button>
           <button 
             className="btn" 
@@ -50,7 +55,7 @@ const Modal: React.FC<ModalProps> = ({
               boxShadow: type === 'danger' ? '0 0 20px rgba(239, 68, 68, 0.3)' : '0 0 20px var(--glow-color)'
             }}
           >
-            {confirmLabel}
+            {confirmLabel || t.modal_confirm}
           </button>
         </div>
       </div>

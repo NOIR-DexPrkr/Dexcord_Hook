@@ -4,17 +4,17 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Outfit', sans-serif;
   
-  --bg-color: #020617;
-  --surface-color: rgba(15, 23, 42, 0.6);
-  --surface-hover: rgba(30, 41, 59, 0.8);
+  --bg-color: #131416;
+  --surface-color: rgba(33, 35, 39, 0.6);
+  --surface-hover: rgba(43, 45, 49, 0.8);
   --border-color: rgba(255, 255, 255, 0.08);
-  --accent-color: #8b5cf6;
-  --accent-hover: #7c3aed;
+  --accent-color: #7289da;
+  --accent-hover: #5865f2;
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-secondary: #a5adb8;
+  --text-muted: #78818d;
   
-  --glow-color: rgba(139, 92, 246, 0.3);
+  --glow-color: rgba(92, 95, 246, 0.3);
   
   --radius-sm: 8px;
   --radius-md: 12px;

@@ -7,8 +7,14 @@ import History from './components/History'
 import Modal from './components/Modal'
 import type { ModalProps } from './components/Modal'
 import type { Webhook, SentMessage, View, WebhookPayload } from './types'
+import { translations } from './translations'
+import type { Language } from './translations'
 
 function App() {
+  const [language, setLanguage] = useState<Language>(() => {
+    return (localStorage.getItem('Dexcord Hook_language') as Language) || 'es'
+  })
+
   const [view, setView] = useState<View>(() => {
     return (localStorage.getItem('Dexcord Hook_current_view') as View) || 'dashboard'
   })
@@ -22,6 +28,9 @@ function App() {
     const saved = localStorage.getItem('Dexcord Hook_history')
     return saved ? JSON.parse(saved) : []
   })
+
+  // Translation helper
+  const t = translations[language];
 
   // Edit Mode State
   const [editingMessage, setEditingMessage] = useState<SentMessage | null>(null);
@@ -43,10 +52,14 @@ function App() {
     setModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  // Save current view
+  // Save current view and language
   useEffect(() => {
     localStorage.setItem('Dexcord Hook_current_view', view)
   }, [view])
+
+  useEffect(() => {
+    localStorage.setItem('Dexcord Hook_language', language)
+  }, [language])
 
   // Save to LocalStorage
   useEffect(() => {
@@ -154,30 +167,35 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }}>
-      <Navbar currentView={view} setCurrentView={setView} />
+      <Navbar 
+        currentView={view} 
+        setCurrentView={setView} 
+        language={language} 
+        setLanguage={setLanguage} 
+      />
       
       <main style={{ flex: 1, overflowY: 'auto', background: 'rgba(0,0,0,0.1)' }}>
         {view === 'dashboard' && (
           <div className="fade-in" style={{ padding: '3rem' }}>
-             <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Dashboard</h1>
+             <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>{t.welcome}</h1>
              <p style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', maxWidth: '600px' }}>
-                Your personal command center for Discord Webhooks. manage, send, and edit messages with ease.
+                {t.dashboard_desc}
              </p>
              
              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginTop: '4rem' }}>
                 <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)' }}>
                    <div style={{ color: 'var(--accent-color)', fontSize: '2rem', marginBottom: '1rem', fontWeight: 700 }}>{webhooks.length}</div>
-                   <p style={{ color: 'var(--text-muted)' }}>Registered Webhooks</p>
+                   <p style={{ color: 'var(--text-muted)' }}>{t.stats_webhooks}</p>
                 </div>
                 <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)' }}>
                    <div style={{ color: '#10b981', fontSize: '2rem', marginBottom: '1rem', fontWeight: 700 }}>{history.length}</div>
-                   <p style={{ color: 'var(--text-muted)' }}>Messages Sent</p>
+                   <p style={{ color: 'var(--text-muted)' }}>{t.stats_messages}</p>
                 </div>
                 <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)', cursor: 'pointer' }} onClick={() => setView('composer')}>
                    <div style={{ color: 'var(--accent-color)', marginBottom: '1rem' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                    </div>
-                   <p style={{ color: 'var(--text-muted)' }}>Send New Message</p>
+                   <p style={{ color: 'var(--text-muted)' }}>{t.send_new}</p>
                 </div>
              </div>
           </div>
@@ -189,6 +207,7 @@ function App() {
             onAdd={addWebhook} 
             onDelete={deleteWebhook} 
             showModal={showModal}
+            language={language}
           />
         )}
 
@@ -200,6 +219,7 @@ function App() {
             editingMessage={editingMessage}
             onCancelEdit={cancelEdit}
             showModal={showModal}
+            language={language}
           />
         )}
 
@@ -209,6 +229,7 @@ function App() {
             onTriggerEdit={triggerEdit}
             onDeleteMessage={deleteMessage}
             showModal={showModal}
+            language={language}
           />
         )}
       </main>

@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Webhook } from '../types';
 import type { ModalProps } from './Modal';
+import { translations } from '../translations';
+import type { Language } from '../translations';
 
 interface WebhookManagerProps {
   webhooks: Webhook[];
   onAdd: (webhook: Webhook) => void;
   onDelete: (id: string) => void;
   showModal: (config: Omit<ModalProps, 'isOpen'>) => void;
+  language: Language;
 }
 
-const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDelete, showModal }) => {
+const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDelete, showModal, language }) => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
+  const t = translations[language];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,8 +24,8 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
     // Simple URL validation
     if (!url.startsWith('https://discord.com/api/webhooks/')) {
        showModal({
-         title: 'Invalid Webhook URL',
-         message: 'The URL provided does not appear to be a valid Discord Webhook URL. It should start with https://discord.com/api/webhooks/',
+         title: t.wm_invalid_url,
+         message: t.wm_invalid_url_desc,
          onConfirm: () => {},
          onCancel: () => {},
          type: 'warning'
@@ -36,21 +40,21 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
 
   return (
     <div className="fade-in" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>Webhook Management</h1>
+      <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>{t.wm_title}</h1>
       
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius-lg)', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <h3 style={{ color: 'var(--accent-color)' }}>Add New Webhook</h3>
+        <h3 style={{ color: 'var(--accent-color)' }}>{t.wm_add_title}</h3>
         <div>
-          <label>Friendly Name</label>
+          <label>{t.wm_name_label}</label>
           <input 
             type="text" 
-            placeholder="e.g. My Bot Server" 
+            placeholder={t.wm_name_placeholder} 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
           />
         </div>
         <div>
-          <label>Webhook URL</label>
+          <label>{t.wm_url_label}</label>
           <input 
             type="text" 
             placeholder="https://discord.com/api/webhooks/..." 
@@ -59,7 +63,7 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
           />
         </div>
         <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-          Connect Webhook
+          {t.wm_connect}
         </button>
       </form>
 

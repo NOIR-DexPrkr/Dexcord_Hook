@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 import type { SentMessage } from '../types';
 import type { ModalProps } from './Modal';
+import { translations } from '../translations';
+import type { Language } from '../translations';
 
 interface HistoryProps {
   messages: SentMessage[];
   onTriggerEdit: (msg: SentMessage) => void;
   onDeleteMessage: (msg: SentMessage, discordDelete: boolean) => Promise<boolean>;
   showModal: (config: Omit<ModalProps, 'isOpen'>) => void;
+  language: Language;
 }
 
-const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMessage, showModal }) => {
+const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMessage, showModal, language }) => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const t = translations[language];
 
   const handleDeleteLocal = (msg: SentMessage) => {
     showModal({
-      title: 'Remove from History?',
-      message: 'This will remove the message from Dexcord Hook history, but it will still remain visible in Discord.',
-      confirmLabel: 'Remove Local',
+      title: t.modal_remove_local_title,
+      message: t.modal_remove_local_desc,
+      confirmLabel: t.modal_remove_local_confirm,
       onConfirm: async () => {
         setDeletingId(msg.id);
         await onDeleteMessage(msg, false);
@@ -29,16 +33,16 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
 
   const handleDeleteDiscord = (msg: SentMessage) => {
     showModal({
-      title: 'Delete from Discord?',
-      message: 'This will permanently delete the message from the Discord channel and remove it from your Dexcord Hook history. This action cannot be undone.',
-      confirmLabel: 'Delete Everywhere',
+      title: t.modal_delete_discord_title,
+      message: t.modal_delete_discord_desc,
+      confirmLabel: t.modal_delete_discord_confirm,
       onConfirm: async () => {
         setDeletingId(msg.id);
         const success = await onDeleteMessage(msg, true);
         if (!success) {
            showModal({
-             title: 'Deletion Failed',
-             message: 'Could not delete the message from Discord. It might have already been deleted or the webhook URL is invalid.',
+             title: t.modal_delete_fail_title,
+             message: t.modal_delete_fail_desc,
              onConfirm: () => {},
              onCancel: () => {},
              type: 'danger'
@@ -53,11 +57,11 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
 
   return (
     <div className="fade-in" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>Message History</h1>
+      <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>{t.hist_title}</h1>
       
       <div style={{ display: 'grid', gap: '1.5rem' }}>
         {messages.length === 0 && (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem' }}>No messages sent yet.</p>
+          <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '3rem' }}>{t.hist_no_messages}</p>
         )}
         
         {messages.map((msg) => (
@@ -79,13 +83,13 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
                   style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"/></svg>
-                  Edit
+                  {t.hist_edit}
                 </button>
                 <div style={{ display: 'flex', gap: '2px' }}>
                   <button 
                     onClick={() => handleDeleteLocal(msg)}
                     className="btn btn-outline" 
-                    title="Remove from Local History"
+                    title={t.hist_delete_local}
                     style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem', borderRight: 'none', borderRadius: '4px 0 0 4px' }}
                     disabled={deletingId === msg.id}
                   >
@@ -94,7 +98,7 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
                   <button 
                     onClick={() => handleDeleteDiscord(msg)}
                     className="btn btn-outline" 
-                    title="Delete from Discord Server"
+                    title={t.hist_delete_discord}
                     style={{ padding: '0.4rem 0.6rem', fontSize: '0.875rem', borderRadius: '0 4px 4px 0', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}
                     disabled={deletingId === msg.id}
                   >
