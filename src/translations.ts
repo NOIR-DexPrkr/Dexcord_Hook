@@ -9,7 +9,7 @@ export const translations = {
     stats_webhooks: 'Webhooks Registrados',
     stats_messages: 'Mensajes Enviados',
     send_new: 'Enviar Nuevo Mensaje',
-    operational: 'Operacional',
+    operational: 'Funcionando',
     
     // Webhook Manager
     wm_title: 'Gestión de Webhooks',
