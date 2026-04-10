@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# 🚀 Dexcord Hook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[English](README.md) | [Español](README.es.md)
 
-Currently, two official plugins are available:
+**Dexcord Hook** is a modern, premium, and powerful management dashboard for Discord Webhooks. Built with a focus on speed, aesthetics, and user experience, it allows you to manage multiple webhooks, compose complex messages with embeds, and track your history—all from a single, beautiful interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<div align="center">
+  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/webhook.svg" width="120" height="120" alt="Dexcord Hook Logo" />
+</div>
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **🌐 Bidirectional Multi-language**: Fully localized in English and Spanish.
+- **⚡ Advanced Composer**: Switch between a user-friendly form and a raw JSON editor with real-time synchronization.
+- **👁️ Live Preview**: See exactly how your message will look on Discord before sending it.
+- **📦 Webhook Manager**: Register multiple webhooks and switch between them effortlessly.
+- **📜 Smart History**: Keep track of sent messages. Edit or delete them directly from the dashboard (syncs with Discord!).
+- **💎 Premium UI**: Modern glassmorphism design with smooth animations and a responsive layout.
+- **💾 Local Persistence**: Your webhooks and history are saved safely in your browser's local storage.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Framework**: [React 19](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: Vanilla CSS (Custom Design System with CSS Variables)
+- **Icons**: Custom optimized SVG Icons
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [Node.js](https://nodejs.org/) (Latest LTS recommended)
+- [npm](https://www.npmjs.com/)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/hookdex.git
+   ```
+2. **Navigate to the directory**:
+   ```bash
+   cd hookdex
+   ```
+3. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📖 Usage
+
+1. **Add a Webhook**: Go to the **Webhooks** tab and paste your Discord Webhook URL.
+2. **Compose**: Use the **Composer** to write your message. You can add embeds, fields, images, and more.
+3. **Send**: Hit "Send Webhook" and watch it appear in your Discord channel.
+4. **Manage**: Use the **History** tab to edit previous messages or delete them from Discord.
+
+## 🔒 Privacy & Security
+
+Dexcord Hook operates entirely in your browser. Your Webhook URLs and history never leave your machine—they are stored locally and only sent directly to Discord's official API.
+
+---
+
+Created with 🤍 for the Discord Developer Community.
+
