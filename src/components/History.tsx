@@ -68,13 +68,13 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
     <div className="fade-in" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 700 }}>{t.hist_title}</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>View and manage your recent webhook deliveries.</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>View and manage your recent webhook deliveries.</p>
       </div>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {messages.length === 0 && (
           <div style={{ border: '1px dashed var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '4rem', textAlign: 'center' }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t.hist_no_messages}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.hist_no_messages}</p>
           </div>
         )}
         
@@ -146,9 +146,9 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
                   <img src={msg.payload.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 600, color: '#fff', fontSize: '1rem' }}>{msg.payload.username || 'Dexcord Hook Bot'}</span>
-                    <span style={{ background: '#5865f2', color: '#fff', fontSize: '0.6rem', padding: '1px 4px', borderRadius: '3px', fontWeight: 700 }}>BOT</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.1rem' }}>
+                    <span style={{ fontWeight: 600, color: '#fff', fontSize: '0.75rem' }}>{msg.payload.username || 'Dexcord Hook Bot'}</span>
+                    <span style={{ background: '#5865f2', color: '#fff', fontSize: '0.55rem', padding: '1px 3px', borderRadius: '3px', fontWeight: 700 }}>BOT</span>
                   </div>
 
                   {content && (
@@ -157,7 +157,7 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
                   {needsExpansion && (
                     <button 
                       onClick={() => toggleExpand(msg.id)}
-                      style={{ background: 'none', border: 'none', color: '#00a8fc', cursor: 'pointer', padding: 0, marginTop: '4px', fontSize: '0.875rem', display: 'block' }}
+                      style={{ background: 'none', border: 'none', color: '#00a8fc', cursor: 'pointer', padding: 0, marginTop: '4px', fontSize: '0.75rem', display: 'block' }}
                     >
                       {isExpanded ? '...show less' : '...show more'}
                     </button>
@@ -176,19 +176,19 @@ const History: React.FC<HistoryProps> = ({ messages, onTriggerEdit, onDeleteMess
                         {embed.author?.name && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                             {embed.author.icon_url && <img src={embed.author.icon_url} style={{ width: '24px', height: '24px', borderRadius: '50%' }} alt="" />}
-                            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#fff' }}>{embed.author.name}</span>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#fff' }}>{embed.author.name}</span>
                           </div>
                         )}
                         
-                        {embed.title && <div style={{ fontWeight: 600, color: '#00a8fc', marginBottom: '0.5rem', fontSize: '1rem' }}><Markdown content={embed.title} /></div>}
+                        {embed.title && <div style={{ fontWeight: 600, color: '#00a8fc', marginBottom: '0.25rem', fontSize: '0.875rem', wordBreak: 'break-word' }}><Markdown content={embed.title} /></div>}
                         {embed.description && <Markdown content={embed.description} />}
                         
                         {embed.fields && embed.fields.length > 0 && (
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginTop: '0.75rem' }}>
                             {embed.fields.map((f, fi) => (
                               <div key={fi} style={{ gridColumn: f.inline ? 'span 1' : 'span 3' }}>
-                                <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.875rem', marginBottom: '0.125rem' }}><Markdown content={f.name} /></div>
-                                <div style={{ color: '#dbdee1', fontSize: '0.875rem' }}><Markdown content={f.value} /></div>
+                                <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.75rem', marginBottom: '0.1rem', wordBreak: 'break-word' }}><Markdown content={f.name} /></div>
+                                <div style={{ color: '#dbdee1', fontSize: '0.75rem', wordBreak: 'break-word' }}><Markdown content={f.value} /></div>
                               </div>
                             ))}
                           </div>

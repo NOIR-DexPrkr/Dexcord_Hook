@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language }
                 color: currentView === item.id ? 'var(--text-primary)' : 'var(--text-muted)',
                 border: currentView === item.id ? '1px solid var(--border-color)' : '1px solid transparent',
                 padding: '0.4rem 0.8rem',
-                fontSize: '0.875rem',
+                fontSize: '0.75rem',
                 borderRadius: 'var(--radius-md)'
               }}
             >

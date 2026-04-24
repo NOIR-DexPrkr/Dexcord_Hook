@@ -24,7 +24,7 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
             background: '#1e1f22', 
             padding: '0.5rem', 
             borderRadius: '4px', 
-            fontSize: '0.875rem', 
+            fontSize: '0.75rem', 
             overflowX: 'auto',
             fontFamily: 'monospace',
             margin: '0.25rem 0'
@@ -47,15 +47,15 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
 
     // Heading Processing
     if (line.startsWith('### ')) {
-      renderedLines.push(<h3 key={index} style={{ fontSize: '1rem', fontWeight: 700, margin: '0.5rem 0 0.25rem' }}>{renderInline(line.substring(4))}</h3>);
+      renderedLines.push(<h3 key={index} style={{ fontSize: '0.7rem', fontWeight: 700, margin: '0.4rem 0 0.2rem' }}>{renderInline(line.substring(4))}</h3>);
       return;
     }
     if (line.startsWith('## ')) {
-      renderedLines.push(<h2 key={index} style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0.75rem 0 0.25rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.125rem' }}>{renderInline(line.substring(3))}</h2>);
+      renderedLines.push(<h2 key={index} style={{ fontSize: '0.875rem', fontWeight: 700, margin: '0.6rem 0 0.2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.1rem' }}>{renderInline(line.substring(3))}</h2>);
       return;
     }
     if (line.startsWith('# ')) {
-      renderedLines.push(<h1 key={index} style={{ fontSize: '1.5rem', fontWeight: 700, margin: '1rem 0 0.5rem' }}>{renderInline(line.substring(2))}</h1>);
+      renderedLines.push(<h1 key={index} style={{ fontSize: '1rem', fontWeight: 700, margin: '0.8rem 0 0.4rem' }}>{renderInline(line.substring(2))}</h1>);
       return;
     }
 
@@ -69,16 +69,37 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
       return;
     }
 
+    // Lists
+    if (line.trim().startsWith('- ')) {
+      renderedLines.push(
+        <div key={index} style={{ display: 'flex', gap: '0.5rem', paddingLeft: '0.5rem' }}>
+          <span style={{ color: 'var(--text-muted)' }}>•</span>
+          <div>{renderInline(line.trim().substring(2))}</div>
+        </div>
+      );
+      return;
+    }
+
     // Regular line
     renderedLines.push(<div key={index}>{renderInline(line)}</div>);
   });
 
-  return <div className="markdown-container">{renderedLines}</div>;
+  return <div className="markdown-container" style={{ fontSize: '0.75rem', lineHeight: '1.4' }}>{renderedLines}</div>;
 };
 
 // Helper to render inline markdown
 function renderInline(text: string): React.ReactNode {
   let parts: (string | React.ReactNode)[] = [text];
+
+  // Specific Discord Links (before general URLs)
+  parts = splitByRegex(parts, /https?:\/\/discord\.com\/channels\/\d+\/\d+(?:\/\d+)?/g, () => <span className="md-mention" style={{ color: '#c9cdfb' }}>#channel</span>);
+  
+  // General URLs
+  parts = splitByRegex(parts, /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g, (match) => (
+    <a href={match} target="_blank" rel="noopener noreferrer" style={{ color: '#00a8fc', textDecoration: 'none' }} onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'} onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}>
+      {match}
+    </a>
+  ));
 
   // Bold
   parts = splitByRegex(parts, /\*\*(.*?)\*\*/g, (match) => <strong>{match}</strong>);
@@ -97,8 +118,6 @@ function renderInline(text: string): React.ReactNode {
   parts = splitByRegex(parts, /<@!?(\d+)>/g, () => <span className="md-mention">@mention</span>);
   parts = splitByRegex(parts, /<@&(\d+)>/g, () => <span className="md-mention">@role</span>);
   parts = splitByRegex(parts, /<#(\d+)>/g, () => <span className="md-mention" style={{ color: '#c9cdfb' }}>#channel</span>);
-  // Channel Links
-  parts = splitByRegex(parts, /https:\/\/discord\.com\/channels\/\d+\/\d+(?:\/\d+)?/g, () => <span className="md-mention" style={{ color: '#c9cdfb' }}>#channel</span>);
 
   return <>{parts}</>;
 }

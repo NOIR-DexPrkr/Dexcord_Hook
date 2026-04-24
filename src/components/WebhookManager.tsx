@@ -53,7 +53,7 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
     <div className="fade-in" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 700 }}>{t.wm_title}</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t.wm_subtitle}</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.wm_subtitle}</p>
       </div>
       
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -88,7 +88,7 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
         <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.wm_registered_title}</h3>
         {webhooks.length === 0 && (
           <div style={{ border: '1px dashed var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '3rem', textAlign: 'center' }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t.wm_no_webhooks}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{t.wm_no_webhooks}</p>
           </div>
         )}
         <div style={{ display: 'grid', gap: '0.75rem' }}>

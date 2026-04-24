@@ -18,6 +18,25 @@ interface MessageComposerProps {
 
 type Tab = 'form' | 'json';
 
+const AutoResizeTextarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = (props) => {
+  const ref = React.useRef<HTMLTextAreaElement>(null);
+  
+  React.useEffect(() => {
+    if (ref.current) {
+      ref.current.style.height = 'auto';
+      ref.current.style.height = ref.current.scrollHeight + 'px';
+    }
+  }, [props.value]);
+
+  return (
+    <textarea 
+      {...props} 
+      ref={ref} 
+      style={{ ...props.style, resize: 'none', overflow: 'hidden' }} 
+    />
+  );
+};
+
 const MessageComposer: React.FC<MessageComposerProps> = ({ 
   webhooks, 
   onSendMessage, 
@@ -35,8 +54,6 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const t = translations[language];
 
-  const contentRef = React.useRef<HTMLTextAreaElement>(null);
-
   // Payload State
   const [payload, setPayload] = useState<WebhookPayload>(() => {
     if (editingMessage) return editingMessage.payload;
@@ -46,14 +63,6 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
 
   const [jsonValue, setJsonValue] = useState(JSON.stringify(payload, null, 2));
   const [expandedEmbeds, setExpandedEmbeds] = useState<number[]>([0]);
-
-  // Auto-resize textarea
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.style.height = 'auto';
-      contentRef.current.style.height = contentRef.current.scrollHeight + 'px';
-    }
-  }, [payload.content]);
 
   // Sync JSON and draft
   useEffect(() => {
@@ -205,9 +214,8 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                   <span title="Block" style={{ cursor: 'help', fontSize: '0.75rem', fontFamily: 'monospace' }}>{`> quote`}</span>
                 </div>
 
-                <textarea 
-                  ref={contentRef}
-                  style={{ borderRadius: '0 0 var(--radius-md) var(--radius-md)', minHeight: '100px', resize: 'none' }}
+                <AutoResizeTextarea 
+                  style={{ borderRadius: '0 0 var(--radius-md) var(--radius-md)', minHeight: '100px' }}
                   placeholder={t.comp_content_placeholder} 
                   value={payload.content} 
                   onChange={(e) => setPayload({ ...payload, content: e.target.value })} 
@@ -247,7 +255,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                 {payload.embeds?.map((embed, idx) => (
                   <div key={idx} className="accordion" style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', marginBottom: '0.75rem', background: 'rgba(2, 6, 23, 0.3)' }}>
                     <div className="accordion-header" style={{ padding: '0.75rem 1rem' }} onClick={() => setExpandedEmbeds(expandedEmbeds.includes(idx) ? expandedEmbeds.filter(i => i !== idx) : [...expandedEmbeds, idx])}>
-                      <h4 style={{ fontSize: '0.875rem', fontWeight: 600 }}>{t.comp_embed_prefix} {idx + 1} • {embed.title || t.comp_untitled}</h4>
+                      <h4 style={{ fontSize: '0.75rem', fontWeight: 600 }}>{t.comp_embed_prefix} {idx + 1} • {embed.title || t.comp_untitled}</h4>
                       <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                         <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#ef4444', opacity: 0.7, padding: '2px' }} onClick={(e) => { e.stopPropagation(); removeEmbed(idx); }}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
@@ -274,7 +282,11 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                           <label style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>{t.embed_body}</label>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                              <input type="text" placeholder={t.txt_title} value={embed.title || ''} onChange={(e) => updateEmbed(idx, { title: e.target.value })} />
-                             <textarea rows={3} placeholder={t.txt_desc} value={embed.description || ''} onChange={(e) => updateEmbed(idx, { description: e.target.value })} />
+                             <AutoResizeTextarea 
+                               placeholder={t.txt_desc} 
+                               value={embed.description || ''} 
+                               onChange={(e) => updateEmbed(idx, { description: e.target.value })} 
+                             />
                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 60px', gap: '0.75rem' }}>
                                 <input type="text" placeholder="URL" value={embed.url || ''} onChange={(e) => updateEmbed(idx, { url: e.target.value })} />
                                 <input type="color" value={`#${(embed.color || 5814783).toString(16).padStart(6, '0')}`} onChange={(e) => updateEmbed(idx, { color: parseInt(e.target.value.replace('#', ''), 16) })} style={{ height: '34px', padding: '2px', cursor: 'pointer' }} />
@@ -292,7 +304,11 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                             {embed.fields?.map((f, fIdx) => (
                               <div key={fIdx} className="field-row" style={{ gridTemplateColumns: '1fr 1fr 70px auto', gap: '0.5rem' }}>
                                 <input type="text" placeholder={t.txt_name} value={f.name} onChange={(e) => updateField(idx, fIdx, { name: e.target.value })} />
-                                <input type="text" placeholder={t.txt_value} value={f.value} onChange={(e) => updateField(idx, fIdx, { value: e.target.value })} />
+                                <AutoResizeTextarea 
+                                  placeholder={t.txt_value} 
+                                  value={f.value} 
+                                  onChange={(e) => updateField(idx, fIdx, { value: e.target.value })} 
+                                />
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
                                   <input type="checkbox" checked={f.inline} onChange={(e) => updateField(idx, fIdx, { inline: e.target.checked })} style={{ width: '14px', height: '14px' }} />
                                   <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{t.txt_inline}</span>
@@ -381,7 +397,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
             <span className="fade-in" style={{ 
               color: status.type === 'success' ? '#10b981' : '#ef4444', 
               fontWeight: 600, 
-              fontSize: '0.875rem',
+              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem'
@@ -403,17 +419,27 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
 
       {/* Preview Side */}
       <div className={`composer-preview ${showPreviewMobile ? 'mobile-visible' : ''}`}>
-        <h3 style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.1em', fontWeight: 600 }}>{t.comp_preview_title}</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.1em', fontWeight: 600, margin: 0 }}>{t.comp_preview_title}</h3>
+          {showPreviewMobile && (
+            <button 
+              onClick={() => setShowPreviewMobile(false)}
+              style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '32px', height: '32px', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center' }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          )}
+        </div>
         <div style={{ background: '#313338', borderRadius: 'var(--radius-lg)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid #1e1f22', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.4)' }}>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
              <div style={{ width: '40px', height: '40px', flexShrink: 0, borderRadius: '50%', overflow: 'hidden', background: '#1e1f22' }}>
                <img src={payload.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Avatar" />
              </div>
              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.15rem' }}>
-                   <span style={{ fontWeight: 500, color: '#fff', fontSize: '1rem' }}>{payload.username || 'Dexcord Hook Bot'}</span>
-                   <span style={{ background: '#5865f2', color: '#fff', fontSize: '0.625rem', padding: '1px 4px', borderRadius: '3px', fontWeight: 600, letterSpacing: '0.02em' }}>{t.comp_bot_tag}</span>
-                   <span style={{ color: '#949ba4', fontSize: '0.75rem' }}>{t.comp_today_at} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.1rem' }}>
+                   <span style={{ fontWeight: 500, color: '#fff', fontSize: '0.75rem' }}>{payload.username || 'Dexcord Hook Bot'}</span>
+                   <span style={{ background: '#5865f2', color: '#fff', fontSize: '0.55rem', padding: '1px 3px', borderRadius: '3px', fontWeight: 600, letterSpacing: '0.02em' }}>{t.comp_bot_tag}</span>
+                   <span style={{ color: '#949ba4', fontSize: '0.7rem' }}>{t.comp_today_at} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 
                 {payload.content && <Markdown content={payload.content} />}
@@ -438,15 +464,15 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                       </div>
                     )}
                     
-                    {embed.title && <div style={{ fontWeight: 600, color: '#00a8fc', marginBottom: '0.5rem', fontSize: '1rem', lineHeight: '1.375rem' }}><Markdown content={embed.title} /></div>}
+                    {embed.title && <div style={{ fontWeight: 600, color: '#00a8fc', marginBottom: '0.25rem', fontSize: '0.875rem', lineHeight: '1.25rem', wordBreak: 'break-word' }}><Markdown content={embed.title} /></div>}
                     {embed.description && <Markdown content={embed.description} />}
                     
                     {embed.fields && embed.fields.length > 0 && (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginTop: '0.75rem' }}>
                         {embed.fields.map((f, fi) => (
                           <div key={fi} style={{ gridColumn: f.inline ? 'span 1' : 'span 3' }}>
-                            <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.875rem', marginBottom: '0.125rem' }}><Markdown content={f.name} /></div>
-                            <div style={{ color: '#dbdee1', fontSize: '0.875rem' }}><Markdown content={f.value} /></div>
+                            <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.75rem', marginBottom: '0.1rem', wordBreak: 'break-word' }}><Markdown content={f.name} /></div>
+                            <div style={{ color: '#dbdee1', fontSize: '0.75rem', wordBreak: 'break-word' }}><Markdown content={f.value} /></div>
                           </div>
                         ))}
                       </div>
@@ -526,8 +552,10 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
             inset: 0;
             z-index: 105;
             background: var(--bg-color);
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem 120px 1rem;
             overflow-y: auto;
+            height: 100vh;
+            max-height: 100vh;
           }
           .mobile-preview-toggle {
             display: flex;

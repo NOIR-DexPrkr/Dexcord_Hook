@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({
       <div className="modal-content glass fade-in" onClick={(e) => e.stopPropagation()} style={{ padding: '1.5rem', border: '1px solid var(--border-color)', maxWidth: '400px' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{title}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: '1.5' }}>{message}</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.5' }}>{message}</p>
         </div>
         
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
