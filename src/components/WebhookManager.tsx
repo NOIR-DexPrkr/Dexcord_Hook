@@ -16,7 +16,17 @@ interface WebhookManagerProps {
 const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDelete, showModal, closeModal, language }) => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
+  const [visibleUrls, setVisibleUrls] = useState<Record<string, boolean>>({});
   const t = translations[language];
+
+  const toggleUrlVisibility = (id: string) => {
+    setVisibleUrls(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const maskUrl = (url: string) => {
+    if (url.length < 15) return url;
+    return url.substring(0, 33) + '...' + url.substring(url.length - 8);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +71,7 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
           <div>
             <label style={{ fontSize: '0.75rem' }}>{t.wm_url_label}</label>
             <input 
-              type="text" 
+              type="password" 
               placeholder="https://discord.com/api/webhooks/..." 
               value={url} 
               onChange={(e) => setUrl(e.target.value)} 
@@ -84,11 +94,23 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
         <div style={{ display: 'grid', gap: '0.75rem' }}>
           {webhooks.map((webhook) => (
             <div key={webhook.id} className="glass glass-hover" style={{ padding: '1rem 1.25rem', borderRadius: 'var(--radius-lg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'var(--transition)' }}>
-               <div style={{ minWidth: 0 }}>
+               <div style={{ minWidth: 0, flex: 1 }}>
                   <h4 style={{ color: 'var(--text-primary)', fontSize: '0.9375rem', fontWeight: 600 }}>{webhook.name}</h4>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '400px', opacity: 0.7 }}>
-                     {webhook.url}
-                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.7 }}>
+                       {visibleUrls[webhook.id] ? webhook.url : maskUrl(webhook.url)}
+                    </p>
+                    <button 
+                      onClick={() => toggleUrlVisibility(webhook.id)}
+                      style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}
+                    >
+                      {visibleUrls[webhook.id] ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88 3.59 3.59"/><path d="M17.36 15.36A9 9 0 0 1 2.39 5.03"/><path d="M12.64 8.64A3 3 0 0 1 15.36 11.36"/><path d="M23.07 10.2a13.2 13.2 0 0 0-4.71-6.84"/><path d="M15.36 15.36 12 12"/></svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                      )}
+                    </button>
+                  </div>
                </div>
                <button 
                  onClick={() => onDelete(webhook.id)}
@@ -99,7 +121,8 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
                    color: '#ef4444',
                    padding: '0.375rem 0.75rem',
                    fontSize: '0.75rem',
-                   borderRadius: 'var(--radius-md)'
+                   borderRadius: 'var(--radius-md)',
+                   marginLeft: '1rem'
                  }}
                >
                  {t.wm_delete_btn}

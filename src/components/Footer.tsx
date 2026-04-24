@@ -16,21 +16,25 @@ const Footer: React.FC<FooterProps> = ({ language, onLanguageChange }) => {
       padding: '1.5rem 2rem', 
       marginTop: 'auto',
       background: 'rgba(2, 6, 23, 0.4)',
-      backdropFilter: 'blur(10px)'
+      backdropFilter: 'blur(10px)',
+      paddingBottom: '80px' // Space for mobile nav
     }}>
-      <div style={{ 
-        maxWidth: '1200px', 
-        margin: '0 auto', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        gap: '2rem',
-        flexWrap: 'wrap'
-      }}>
+      <div 
+        className="stack-mobile"
+        style={{ 
+          maxWidth: '1200px', 
+          margin: '0 auto', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          gap: '2rem',
+          flexWrap: 'wrap'
+        }}
+      >
         
         {/* Left: Attribution & Copyright */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <div className="footer-left" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'inherit' }}>
             {t.foot_created_by} <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Dex Parker</span>
           </p>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', opacity: 0.7 }}>
@@ -39,7 +43,7 @@ const Footer: React.FC<FooterProps> = ({ language, onLanguageChange }) => {
         </div>
 
         {/* Right: Socials & Language */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+        <div className="footer-right" style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           {/* Social Icons */}
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <a href="#" title={t.foot_website} style={{ color: 'var(--text-muted)', transition: 'var(--transition)' }} className="social-link">
@@ -91,6 +95,18 @@ const Footer: React.FC<FooterProps> = ({ language, onLanguageChange }) => {
         </div>
 
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-left {
+            align-items: center;
+            text-align: center;
+            width: 100%;
+          }
+          .footer-right {
+            width: 100%;
+          }
+        }
+      `}</style>
     </footer>
   );
 };

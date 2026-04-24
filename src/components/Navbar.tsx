@@ -44,59 +44,135 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language }
   ];
 
   return (
-    <header style={{ 
-      height: '64px', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'space-between', 
-      padding: '0 2rem',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      borderBottom: '1px solid var(--border-color)',
-      background: 'rgba(2, 6, 23, 0.8)',
-      backdropFilter: 'blur(8px)'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+    <>
+      <header className="navbar-desktop">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <img 
-          style={{width: '32px', height: '32px',}}
-          src="/icon.png" 
-          alt="Logo Dexcord Hook" />
-        <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: 0, fontWeight: 700 }}>Dexcord Hook</h2>
-      </div>
-      
-      <nav style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+            style={{ width: '32px', height: '32px' }}
+            src="/icon.png" 
+            alt="Logo Dexcord Hook" 
+          />
+          <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: 0, fontWeight: 700 }}>Dexcord Hook</h2>
+        </div>
+        
+        <nav className="navbar-nav">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentView(item.id)}
+              className={`btn ${currentView === item.id ? 'active' : ''}`}
+              style={{ 
+                background: currentView === item.id ? 'rgba(255,255,255,0.05)' : 'transparent',
+                color: currentView === item.id ? 'var(--text-primary)' : 'var(--text-muted)',
+                border: currentView === item.id ? '1px solid var(--border-color)' : '1px solid transparent',
+                padding: '0.4rem 0.8rem',
+                fontSize: '0.875rem',
+                borderRadius: 'var(--radius-md)'
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {item.icon}
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </nav>
+        
+        <div className="navbar-status">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></div>
+            {t.operational}
+            <span style={{ margin: '0 0.5rem', opacity: 0.3 }}>|</span>
+            <span>v1.2.5</span>
+          </div>
+        </div>
+      </header>
+
+      <nav className="navbar-mobile">
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => setCurrentView(item.id)}
-            className={`btn ${currentView === item.id ? 'active' : ''}`}
-            style={{ 
-              background: currentView === item.id ? 'rgba(255,255,255,0.05)' : 'transparent',
-              color: currentView === item.id ? 'var(--text-primary)' : 'var(--text-muted)',
-              border: currentView === item.id ? '1px solid var(--border-color)' : '1px solid transparent',
-              padding: '0.4rem 0.8rem',
-              fontSize: '0.875rem',
-              borderRadius: 'var(--radius-md)'
-            }}
+            className={`mobile-nav-item ${currentView === item.id ? 'active' : ''}`}
           >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {item.icon}
-              {item.label}
-            </span>
+            {item.icon}
+            <span className="mobile-nav-label">{item.label}</span>
           </button>
         ))}
       </nav>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></div>
-          {t.operational}
-          <span style={{ margin: '0 0.5rem', opacity: 0.3 }}>|</span>
-          <span>v1.2.5</span>
-        </div>
-      </div>
-    </header>
+
+      <style>{`
+        .navbar-desktop {
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 2rem;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          border-bottom: 1px solid var(--border-color);
+          background: rgba(2, 6, 23, 0.8);
+          backdrop-filter: blur(8px);
+        }
+
+        .navbar-mobile {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 64px;
+          background: rgba(15, 23, 42, 0.9);
+          backdrop-filter: blur(12px);
+          border-top: 1px solid var(--border-color);
+          z-index: 100;
+          padding: 0 1rem;
+          justify-content: space-around;
+          align-items: center;
+        }
+
+        .mobile-nav-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          background: transparent;
+          border: none;
+          color: var(--text-muted);
+          transition: var(--transition);
+          cursor: pointer;
+          flex: 1;
+        }
+
+        .mobile-nav-item.active {
+          color: var(--text-primary);
+        }
+
+        .mobile-nav-label {
+          font-size: 10px;
+          font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+          .navbar-desktop {
+            padding: 0 1.5rem;
+          }
+          .navbar-nav, .navbar-status {
+            display: none;
+          }
+          .navbar-mobile {
+            display: flex;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .mobile-nav-label {
+            display: none;
+          }
+        }
+      `}</style>
+    </>
   );
 };
 

@@ -174,7 +174,7 @@ function App() {
         language={language} 
       />
       
-      <main style={{ flex: 1, overflowY: 'auto', background: 'rgba(0,0,0,0.1)' }}>
+      <main style={{ flex: 1, overflowY: 'auto', background: 'rgba(0,0,0,0.1)', paddingBottom: '80px' }}>
         {view === 'dashboard' && (
           <div className="fade-in" style={{ padding: '4rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
              <h1 style={{ fontSize: '2.5rem', marginBottom: '0.75rem', fontWeight: 800 }}>{t.welcome}</h1>
@@ -182,7 +182,7 @@ function App() {
                 {t.dashboard_desc}
              </p>
              
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '3rem' }}>
+             <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '3rem' }}>
                 <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
                    <div style={{ color: 'var(--text-primary)', fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 800 }}>{webhooks.length}</div>
                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.stats_webhooks}</p>

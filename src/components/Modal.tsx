@@ -25,8 +25,17 @@ const Modal: React.FC<ModalProps> = ({
   type = 'info',
   language = 'es'
 }) => {
-  if (!isOpen) return null;
   const t = translations[language];
+
+  React.useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) onCancel();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isOpen, onCancel]);
+
+  if (!isOpen) return null;
 
   const getAccentColor = () => {
     if (type === 'danger') return '#ef4444';
@@ -35,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={onCancel}>
       <div className="modal-content glass fade-in" onClick={(e) => e.stopPropagation()} style={{ padding: '1.5rem', border: '1px solid var(--border-color)', maxWidth: '400px' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{title}</h3>
