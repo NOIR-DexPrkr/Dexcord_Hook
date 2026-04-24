@@ -43,7 +43,7 @@ const WebhookManager: React.FC<WebhookManagerProps> = ({ webhooks, onAdd, onDele
     <div className="fade-in" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 700 }}>{t.wm_title}</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Add and manage your Discord webhook endpoints.</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{t.wm_subtitle}</p>
       </div>
       
       <form onSubmit={handleSubmit} className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)', marginBottom: '3rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

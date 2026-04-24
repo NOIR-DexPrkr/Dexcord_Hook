@@ -58,16 +58,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, language }
       backdropFilter: 'blur(8px)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <div style={{ 
-          width: '28px', 
-          height: '28px', 
-          background: 'var(--text-primary)', 
-          borderRadius: 'var(--radius-sm)', 
-          display: 'grid', 
-          placeItems: 'center'
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--bg-color)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19 9 2-9-18-9 18 9-2ZM12 19v-9"/></svg>
-        </div>
+          <img 
+          style={{width: '32px', height: '32px',}}
+          src="/icon.png" 
+          alt="Logo Dexcord Hook" />
         <h2 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: 0, fontWeight: 700 }}>Dexcord Hook</h2>
       </div>
       

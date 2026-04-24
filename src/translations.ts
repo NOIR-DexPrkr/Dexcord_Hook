@@ -13,6 +13,7 @@ export const translations = {
     
     // Webhook Manager
     wm_title: 'Gestión de Webhooks',
+    wm_subtitle: 'Agrega y gestiona los datos de tus webhook de Discord.',
     wm_add_title: 'Agregar Nuevo Webhook',
     wm_name_label: 'Nombre Amigable',
     wm_name_placeholder: 'ej. Mi Servidor Bot',
@@ -120,6 +121,7 @@ export const translations = {
 
     // Webhook Manager
     wm_title: 'Webhook Management',
+    wm_subtitle: 'Create and Manage your Discord webhooks endpoints.',
     wm_add_title: 'Add New Webhook',
     wm_name_label: 'Friendly Name',
     wm_name_placeholder: 'e.g. My Bot Server',
