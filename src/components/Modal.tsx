@@ -10,7 +10,7 @@ export interface ModalProps {
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
-  type?: 'info' | 'danger' | 'warning';
+  type?: 'info' | 'danger' | 'warning' | 'success';
   language?: Language;
 }
 
@@ -40,6 +40,7 @@ const Modal: React.FC<ModalProps> = ({
   const getAccentColor = () => {
     if (type === 'danger') return '#ef4444';
     if (type === 'warning') return '#f59e0b';
+    if (type === 'success') return '#10b981';
     return 'var(--text-primary)';
   };
 
