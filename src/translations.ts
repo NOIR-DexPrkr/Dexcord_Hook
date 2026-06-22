@@ -30,6 +30,12 @@ export const translations = {
     foot_website: 'Sitio Web',
     foot_discord: 'Comunidad Discord',
     foot_donations: 'Donaciones',
+    backup_export: 'Exportar datos',
+    backup_import: 'Importar datos',
+    backup_success_title: 'Datos importados',
+    backup_success_desc: 'La configuración, los webhooks y el historial se han restaurado correctamente.',
+    backup_error_title: 'Archivo de respaldo inválido',
+    backup_error_desc: 'El archivo seleccionado no es un respaldo válido de Dexcord Hook.',
 
     // Composer
     comp_title: 'Redactor Avanzado',
@@ -138,6 +144,12 @@ export const translations = {
     foot_website: 'Website',
     foot_discord: 'Discord Community',
     foot_donations: 'Donations',
+    backup_export: 'Export data',
+    backup_import: 'Import data',
+    backup_success_title: 'Data imported',
+    backup_success_desc: 'Your configuration, webhooks, and history have been restored successfully.',
+    backup_error_title: 'Invalid backup file',
+    backup_error_desc: 'The selected file is not a valid Dexcord Hook backup.',
 
     // Composer
     comp_title: 'Advanced Composer',

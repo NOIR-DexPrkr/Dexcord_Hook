@@ -11,23 +11,62 @@ import { translations } from './translations'
 import type { Language } from './translations'
 import Footer from './components/Footer'
 
+interface BackupData {
+  version: number;
+  exportedAt: number;
+  language: Language;
+  currentView: View;
+  webhooks: Webhook[];
+  history: SentMessage[];
+  draft?: WebhookPayload;
+}
+
+const STORAGE_KEYS = {
+  language: 'Dexcord Hook_language',
+  currentView: 'Dexcord Hook_current_view',
+  webhooks: 'Dexcord Hook_webhooks',
+  history: 'Dexcord Hook_history',
+  draft: 'Dexcord Hook_draft'
+} as const
+
+const readStoredJSON = <T,>(key: string, fallback: T): T => {
+  try {
+    const saved = localStorage.getItem(key)
+    return saved ? JSON.parse(saved) as T : fallback
+  } catch {
+    return fallback
+  }
+}
+
+const isBackupData = (value: unknown): value is BackupData => {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Record<string, unknown>
+
+  return (
+    typeof candidate.version === 'number' &&
+    typeof candidate.exportedAt === 'number' &&
+    typeof candidate.language === 'string' &&
+    typeof candidate.currentView === 'string' &&
+    Array.isArray(candidate.webhooks) &&
+    Array.isArray(candidate.history)
+  )
+}
+
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
-    return (localStorage.getItem('Dexcord Hook_language') as Language) || 'es'
+    return (localStorage.getItem(STORAGE_KEYS.language) as Language) || 'es'
   })
 
   const [view, setView] = useState<View>(() => {
-    return (localStorage.getItem('Dexcord Hook_current_view') as View) || 'dashboard'
+    return (localStorage.getItem(STORAGE_KEYS.currentView) as View) || 'dashboard'
   })
 
   const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
-    const saved = localStorage.getItem('Dexcord Hook_webhooks')
-    return saved ? JSON.parse(saved) : []
+    return readStoredJSON<Webhook[]>(STORAGE_KEYS.webhooks, [])
   })
 
   const [history, setHistory] = useState<SentMessage[]>(() => {
-    const saved = localStorage.getItem('Dexcord Hook_history')
-    return saved ? JSON.parse(saved) : []
+    return readStoredJSON<SentMessage[]>(STORAGE_KEYS.history, [])
   })
 
   // Translation helper
@@ -55,24 +94,91 @@ function App() {
 
   // Save current view and language
   useEffect(() => {
-    localStorage.setItem('Dexcord Hook_current_view', view)
+    localStorage.setItem(STORAGE_KEYS.currentView, view)
   }, [view])
 
   useEffect(() => {
-    localStorage.setItem('Dexcord Hook_language', language)
+    localStorage.setItem(STORAGE_KEYS.language, language)
   }, [language])
 
   // Save to LocalStorage
   useEffect(() => {
-    localStorage.setItem('Dexcord Hook_webhooks', JSON.stringify(webhooks))
+    localStorage.setItem(STORAGE_KEYS.webhooks, JSON.stringify(webhooks))
   }, [webhooks])
 
   useEffect(() => {
-    localStorage.setItem('Dexcord Hook_history', JSON.stringify(history))
+    localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history))
   }, [history])
 
   const addWebhook = (w: Webhook) => setWebhooks([...webhooks, w])
   const deleteWebhook = (id: string) => setWebhooks(webhooks.filter(w => w.id !== id))
+
+  const handleExportData = () => {
+    const payload: BackupData = {
+      version: 1,
+      exportedAt: Date.now(),
+      language,
+      currentView: view,
+      webhooks,
+      history,
+      draft: readStoredJSON<WebhookPayload | undefined>(STORAGE_KEYS.draft, undefined)
+    }
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `dexcord-hook-backup-${new Date().toISOString().slice(0, 10)}.json`
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImportData = (file: File) => {
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result))
+
+        if (!isBackupData(parsed)) {
+          throw new Error('Invalid backup format')
+        }
+
+        const imported = parsed
+        setLanguage(imported.language)
+        setView(imported.currentView)
+        setWebhooks(imported.webhooks)
+        setHistory(imported.history)
+
+        localStorage.setItem(STORAGE_KEYS.language, imported.language)
+        localStorage.setItem(STORAGE_KEYS.currentView, imported.currentView)
+        localStorage.setItem(STORAGE_KEYS.webhooks, JSON.stringify(imported.webhooks))
+        localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(imported.history))
+
+        if (imported.draft) {
+          localStorage.setItem(STORAGE_KEYS.draft, JSON.stringify(imported.draft))
+        }
+
+        showModal({
+          title: t.backup_success_title,
+          message: t.backup_success_desc,
+          onConfirm: () => closeModal(),
+          onCancel: () => closeModal(),
+          type: 'success'
+        })
+      } catch {
+        showModal({
+          title: t.backup_error_title,
+          message: t.backup_error_desc,
+          onConfirm: () => closeModal(),
+          onCancel: () => closeModal(),
+          type: 'warning'
+        })
+      }
+    }
+
+    reader.readAsText(file)
+  }
 
   const sendMessage = async (webhookId: string, payload: WebhookPayload): Promise<string | null | 'BLOCKED'> => {
     const webhook = webhooks.find(w => w.id === webhookId)
@@ -237,7 +343,12 @@ function App() {
         )}
       </main>
 
-      <Footer language={language} onLanguageChange={setLanguage} />
+      <Footer 
+        language={language} 
+        onLanguageChange={setLanguage} 
+        onExportData={handleExportData}
+        onImportData={handleImportData}
+      />
 
       <Modal {...modal} onCancel={modal.onCancel || closeModal} language={language} />
     </div>

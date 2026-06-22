@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { translations } from '../translations';
 import type { Language } from '../translations';
 
 interface FooterProps {
   language: Language;
   onLanguageChange: (lang: Language) => void;
+  onExportData: () => void;
+  onImportData: (file: File) => void;
 }
 
-const Footer: React.FC<FooterProps> = ({ language, onLanguageChange }) => {
+const Footer: React.FC<FooterProps> = ({ language, onLanguageChange, onExportData, onImportData }) => {
   const t = translations[language];
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      onImportData(file);
+    }
+    event.target.value = '';
+  };
 
   return (
     <footer style={{ 
@@ -57,40 +68,80 @@ const Footer: React.FC<FooterProps> = ({ language, onLanguageChange }) => {
             </a>
           </div>
 
-          {/* Language Toggle in Footer */}
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-            <button 
-              onClick={() => onLanguageChange('es')}
-              style={{ 
-                padding: '0.3rem 0.75rem', 
-                fontSize: '0.7rem', 
-                borderRadius: 'calc(var(--radius-md) - 2px)',
-                background: language === 'es' ? 'var(--text-primary)' : 'transparent',
-                color: language === 'es' ? 'var(--bg-color)' : 'var(--text-muted)',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 700,
-                transition: 'all 0.2s ease'
-              }}
-            >
-              ESPAÑOL
-            </button>
-            <button 
-              onClick={() => onLanguageChange('en')}
-              style={{ 
-                padding: '0.3rem 0.75rem', 
-                fontSize: '0.7rem', 
-                borderRadius: 'calc(var(--radius-md) - 2px)',
-                background: language === 'en' ? 'var(--text-primary)' : 'transparent',
-                color: language === 'en' ? 'var(--bg-color)' : 'var(--text-muted)',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 700,
-                transition: 'all 0.2s ease'
-              }}
-            >
-              ENGLISH
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={onExportData}
+                style={{
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.7rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer'
+                }}
+              >
+                {t.backup_export}
+              </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.7rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer'
+                }}
+              >
+                {t.backup_import}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/json,.json"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+            </div>
+
+            {/* Language Toggle in Footer */}
+            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+              <button 
+                onClick={() => onLanguageChange('es')}
+                style={{ 
+                  padding: '0.3rem 0.75rem', 
+                  fontSize: '0.7rem', 
+                  borderRadius: 'calc(var(--radius-md) - 2px)',
+                  background: language === 'es' ? 'var(--text-primary)' : 'transparent',
+                  color: language === 'es' ? 'var(--bg-color)' : 'var(--text-muted)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                ESPAÑOL
+              </button>
+              <button 
+                onClick={() => onLanguageChange('en')}
+                style={{ 
+                  padding: '0.3rem 0.75rem', 
+                  fontSize: '0.7rem', 
+                  borderRadius: 'calc(var(--radius-md) - 2px)',
+                  background: language === 'en' ? 'var(--text-primary)' : 'transparent',
+                  color: language === 'en' ? 'var(--bg-color)' : 'var(--text-muted)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                ENGLISH
+              </button>
+            </div>
           </div>
         </div>
 
